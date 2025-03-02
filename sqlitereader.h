@@ -1,5 +1,4 @@
-#ifndef INCLIDE_SQLITEREADER_H
-#define INCLIDE_SQLITEREADER_H
+#pragma once
 
 #include <string>
 
@@ -11,5 +10,3 @@ class SQLiteReader
     private:
         std::string d_filepath;
 };
-
-#endif

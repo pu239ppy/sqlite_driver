@@ -1,3 +1,5 @@
+#pragma once
+
 #include <atomic>
 
 std::atomic<bool> ok_to_write;

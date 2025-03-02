@@ -1,5 +1,4 @@
-#ifndef INCLUDE_SQLWRITER_H
-#define INCLUDE_SQLWRITER_H
+#pragma once
 
 #include <string>
 
@@ -12,7 +11,3 @@ class SQLiteWriter
         std::string d_filepath;
 
 };
-
-
-
-#endif // INCLUDE_SQLWRITER_H
