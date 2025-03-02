@@ -2,6 +2,7 @@
 #include <sqlite3.h>
 #include <iostream>
 #include <unistd.h>
+#include "sqlitedriver.h"
 
 static int callback(void* data, int argc, char** argv, char** azColName) {
     int i;
@@ -27,7 +28,7 @@ void SQLiteReader::operator()() const
         sqlite3_close(db);
         return;
     }
-    while (true)
+    while (true == ok_to_read.load())
     {
         std::string SQL = "SELECT * FROM DATA LIMIT 10";
         char *errMsg = 0;
