@@ -15,17 +15,13 @@ SQLiteWriter::SQLiteWriter(std::string &&filepath):
 void SQLiteWriter::operator()() const
 {
     sqlite3 *db;
-    int openrc = sqlite3_open_v2(d_filepath.c_str(), &db, SQLITE_OPEN_READWRITE, NULL);
-    if( openrc )
-    {
-        std::cerr << "Can't open database: " <<  sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return;
-    }
-
-
     while (true == ok_to_write.load())
     {
+        bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READWRITE);
+        if (false == openres)
+        {
+            return;
+        }
         int value = std::rand();
         std::string key = std::to_string(value);
         std::stringstream sqlstream;
@@ -41,6 +37,7 @@ void SQLiteWriter::operator()() const
             sqlite3_close(db);
             return;
         }
+        sqlite3_close(db);
         sleep(20);
     }
     sqlite3_close(db);

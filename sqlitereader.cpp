@@ -21,15 +21,14 @@ SQLiteReader::SQLiteReader(std::string &&filepath):
 void SQLiteReader::operator()() const
 {
     sqlite3 *db;
-    int openrc = sqlite3_open_v2(d_filepath.c_str(), &db, SQLITE_OPEN_READONLY, NULL);
-    if( openrc )
-    {
-        std::cerr << "Can't open database: " <<  sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return;
-    }
+
     while (true == ok_to_read.load())
     {
+        bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READONLY);
+        if (false == openres)
+        {
+            return;
+        }
         std::string SQL = "SELECT * FROM DATA LIMIT 10";
         char *errMsg = 0;
         const char* data = "Callback function called";
