@@ -18,6 +18,7 @@ void SQLiteWriter::operator()() const
     bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READWRITE);
     if (false == openres)
     {
+        std::cerr << "Exiting writer thread" << std::endl;
         return;
     }
 
@@ -37,11 +38,13 @@ void SQLiteWriter::operator()() const
             std::cerr << "SQL Error " << errMsg << std::endl;
             sqlite3_free(errMsg);
             sqlite3_close(db);
+            std::cerr << "Exiting writer thread" << std::endl;
             return;
         }
         sqlite3_close(db);
         sleep(20);
     }
     sqlite3_close(db);
+    std::cout << "Exiting writer thread" << std::endl;
     return;
 }

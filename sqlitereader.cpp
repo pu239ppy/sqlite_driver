@@ -24,6 +24,7 @@ void SQLiteReader::operator()() const
     bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READONLY);
     if (false == openres)
     {
+        std::cerr << "Exiting reader thread" << std::endl;
         return;
     }
     
@@ -38,9 +39,12 @@ void SQLiteReader::operator()() const
             std::cerr << "SQL Error " << errMsg << std::endl;
             sqlite3_free(errMsg);
             sqlite3_close(db);
+            std::cerr << "Exiting reader thread" << std::endl;
             return;
         }
         sleep(5);
     }
+    sqlite3_close(db);
+    std::cout << "Exiting reader thread" << std::endl;
     return;
 }
