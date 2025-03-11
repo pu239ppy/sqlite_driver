@@ -24,7 +24,7 @@ bool opendb(std::string path, sqlite3 **db, int flags)
 }
 
 int main()
-{
+{   
     std::signal(SIGINT, [](int signal)
     {
         ok_to_read.store(false);
