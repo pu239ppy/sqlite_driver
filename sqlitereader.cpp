@@ -28,6 +28,8 @@ void SQLiteReader::operator()() const
         return;
     }
     
+
+
     while (true == ok_to_read.load())
     {
         std::string SQL = "SELECT * FROM DATA LIMIT 10";
