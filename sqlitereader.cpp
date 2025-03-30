@@ -50,3 +50,15 @@ void SQLiteReader::operator()() const
     std::cout << "Exiting reader thread" << std::endl;
     return;
 }
+
+bool SQLiteReader::enqueueRequest(const DataRequest& request)
+{
+    std::lock_guard<std::mutex> lock(queueLock);
+    if (requestQueue.size() >= QUEUE_DEPTH)
+    {
+        std::cout << "Queue is full, cannot enqueue request." << std::endl;
+        return false; // Queue is full
+    }
+    requestQueue.push_back(request);
+    return true;
+}

@@ -5,7 +5,7 @@
 class SQLiteWriter
 {
     public:
-        SQLiteWriter(std::string &&filepath);
+        SQLiteWriter(const std::string& filepath);
         void operator()() const;
     private:
         std::string d_filepath;
