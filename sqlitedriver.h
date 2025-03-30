@@ -31,9 +31,7 @@ public:
     DataRequest& operator=(const DataRequest&) = delete;
     DataRequest(DataRequest&&) = default;
     DataRequest& operator=(DataRequest&&) = default;
-    virtual ~DataRequest() = default;
-
-    virtual void operator()() const = 0;
+    ~DataRequest() = default;
 
     private:
         std::string sqlLquery;

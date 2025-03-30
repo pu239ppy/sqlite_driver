@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "sqlitedriver.h"
+#include <mutex>
 
 static int callback(void* data, int argc, char** argv, char** azColName) {
     int i;
@@ -14,7 +15,7 @@ static int callback(void* data, int argc, char** argv, char** azColName) {
     return 0;
 }
 
-SQLiteReader::SQLiteReader(std::string &&filepath):
+SQLiteReader::SQLiteReader(const std::string& filepath):
     d_filepath(std::move(filepath))
 {}
 
@@ -32,10 +33,15 @@ void SQLiteReader::operator()() const
 
     while (true == ok_to_read.load())
     {
+
         std::string SQL = "SELECT * FROM DATA LIMIT 10";
         char *errMsg = 0;
         const char* data = "Callback function called";
         int exec_rc = sqlite3_exec(db, SQL.c_str(), &callback, (void*)data, &errMsg);
+
+        DataRequest request;
+        bool result = deueueRequest(request);
+
         if (SQLITE_OK != exec_rc)
         {
             std::cerr << "SQL Error " << errMsg << std::endl;
@@ -60,5 +66,17 @@ bool SQLiteReader::enqueueRequest(const DataRequest& request)
         return false; // Queue is full
     }
     requestQueue.push_back(request);
+    return true;
+}
+
+bool SQLiteReader::deueueRequest(DataRequest& request)
+{
+    std::lock_guard<std::mutex> lock(queueLock);
+    if (requestQueue.empty())
+    {
+        std::cout << "Queue is empty, cannot dequeue request." << std::endl;
+        return false; // Queue is empty
+    }
+    requestQueue.pop_front();
     return true;
 }

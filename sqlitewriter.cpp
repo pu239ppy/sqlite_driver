@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "sqlitedriver.h"
 
-SQLiteWriter::SQLiteWriter(std::string &&filepath):
+SQLiteWriter::SQLiteWriter(const std::string& filepath):
     d_filepath(std::move(filepath))
 {}
 

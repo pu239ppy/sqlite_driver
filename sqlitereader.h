@@ -12,7 +12,7 @@ class SQLiteReader
         SQLiteReader(const std::string& filepath);
         void operator()() const;
         bool enqueueRequest(const DataRequest& request);
-        const DataRequest& deueueRequest(void);
+        bool deueueRequest(DataRequest& request);
     private:
         std::string d_filepath;
         std::mutex queueLock;
