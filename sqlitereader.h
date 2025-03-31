@@ -10,7 +10,7 @@ class SQLiteReader
 {
     public:
         SQLiteReader(const std::string& filepath);
-        void operator()() const;
+        void operator()();
         bool enqueueRequest(DataRequest& request);
         bool deueueRequest(DataRequest& request);
     private:

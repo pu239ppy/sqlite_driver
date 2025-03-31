@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "sqlitedriver.h"
 #include <mutex>
+#include "datarequest.h"
 
 static int callback(void* data, int argc, char** argv, char** azColName) {
     int i;
@@ -19,7 +20,7 @@ SQLiteReader::SQLiteReader(const std::string& filepath):
     d_filepath(std::move(filepath))
 {}
 
-void SQLiteReader::operator()() const
+void SQLiteReader::operator()()
 {
     sqlite3 *db;
     bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READONLY);
