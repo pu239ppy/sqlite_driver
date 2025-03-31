@@ -6,6 +6,10 @@
 #include <mutex>
 #include "datarequest.h"
 
+namespace {
+    std::mutex queueLock;
+}
+
 static int callback(void* data, int argc, char** argv, char** azColName) {
     int i;
     std::cerr << (const char*)data << std::endl;

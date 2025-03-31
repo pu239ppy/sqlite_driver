@@ -15,6 +15,5 @@ class SQLiteReader
         bool deueueRequest(DataRequest& request);
     private:
         std::string d_filepath;
-        std::mutex queueLock;
         std::deque<DataRequest> requestQueue;
 };
