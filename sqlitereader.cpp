@@ -8,6 +8,7 @@
 
 namespace {
     std::mutex queueLock;
+    std::deque<DataRequest> requestQueue;
 }
 
 static int callback(void* data, int argc, char** argv, char** azColName) {
@@ -24,7 +25,7 @@ SQLiteReader::SQLiteReader(const std::string& filepath):
     d_filepath(std::move(filepath))
 {}
 
-void SQLiteReader::operator()()
+void SQLiteReader::operator()() const
 {
     sqlite3 *db;
     bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READONLY);
@@ -62,7 +63,7 @@ void SQLiteReader::operator()()
     return;
 }
 
-bool SQLiteReader::enqueueRequest(DataRequest& request)
+bool SQLiteReader::enqueueRequest(DataRequest& request) const
 {
     std::lock_guard<std::mutex> lock(queueLock);
     if (requestQueue.size() >= QUEUE_DEPTH)
@@ -74,7 +75,7 @@ bool SQLiteReader::enqueueRequest(DataRequest& request)
     return true;
 }
 
-bool SQLiteReader::deueueRequest(DataRequest& request)
+bool SQLiteReader::deueueRequest(DataRequest& request) const
 {
     std::lock_guard<std::mutex> lock(queueLock);
     if (requestQueue.empty())
