@@ -57,7 +57,7 @@ void SQLiteReader::operator()() const
     return;
 }
 
-bool SQLiteReader::enqueueRequest(const DataRequest& request)
+bool SQLiteReader::enqueueRequest(DataRequest& request)
 {
     std::lock_guard<std::mutex> lock(queueLock);
     if (requestQueue.size() >= QUEUE_DEPTH)
@@ -65,7 +65,7 @@ bool SQLiteReader::enqueueRequest(const DataRequest& request)
         std::cout << "Queue is full, cannot enqueue request." << std::endl;
         return false; // Queue is full
     }
-    requestQueue.push_back(request);
+    requestQueue.push_front(request);
     return true;
 }
 
@@ -77,6 +77,7 @@ bool SQLiteReader::deueueRequest(DataRequest& request)
         std::cout << "Queue is empty, cannot dequeue request." << std::endl;
         return false; // Queue is empty
     }
-    requestQueue.pop_front();
+    request = requestQueue.back();
+    requestQueue.pop_back();
     return true;
 }

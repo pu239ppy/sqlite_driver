@@ -1,34 +1,31 @@
 #pragma once
 
+#include <algorithm>
 #include <atomic>
 #include <string>
 #include <sqlite3.h>
 #include <deque>
+#include <functional>
 
 extern std::atomic<bool> ok_to_write;
 extern std::atomic<bool> ok_to_read;
 
 extern bool opendb(std::string path, sqlite3 **db, int flags);
 
-
-class RequestCallbackFunction
-{
-public:
-    RequestCallbackFunction() = default;
-    RequestCallbackFunction(const RequestCallbackFunction&) = delete;
-    RequestCallbackFunction& operator=(const RequestCallbackFunction&) = delete;
-    RequestCallbackFunction(RequestCallbackFunction&&) = default;
-    RequestCallbackFunction& operator=(RequestCallbackFunction&&) = default;
-    ~RequestCallbackFunction() = default;
-    int operator()(void* data);
-};
-
 class DataRequest
 {
 public:
     DataRequest() = default;
-    DataRequest(const DataRequest&) = delete;
-    DataRequest& operator=(const DataRequest&) = delete;
+    DataRequest(const DataRequest& othr) = delete;
+    DataRequest& operator=(const DataRequest& othr)
+    {
+        if (this != &othr)
+        {
+            sqlLquery = othr.sqlLquery;
+            requestIdentifier = othr.requestIdentifier;
+        }
+        return *this;
+    }
     DataRequest(DataRequest&&) = default;
     DataRequest& operator=(DataRequest&&) = default;
     ~DataRequest() = default;
@@ -36,7 +33,6 @@ public:
     private:
         std::string sqlLquery;
         std::string requestIdentifier;
-        RequestCallbackFunction callbackFunction;
 };
 
 const int QUEUE_DEPTH = 1000;
