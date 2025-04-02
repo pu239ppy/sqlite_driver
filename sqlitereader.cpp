@@ -48,6 +48,7 @@ void SQLiteReader::operator()()
             std::cerr << "Exiting reader thread" << std::endl;
             return;
         }
+        request.executeCallBack("There we are");
         sleep(5);
     }
     sqlite3_close(db);

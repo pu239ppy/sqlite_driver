@@ -24,7 +24,7 @@ void ConnectionHandler::operator()()
 
     servaddr.sin_family = AF_INET; // IPv4
     servaddr.sin_addr.s_addr = INADDR_ANY; // Any address
-    servaddr.sin_port = htons(8080); // Port
+    servaddr.sin_port = htons(1666); // Port
 
     // Bind the socket to the address and port
     if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {

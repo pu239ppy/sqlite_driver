@@ -45,6 +45,13 @@ public:
         }
         return *this;
     }
+    void executeCallBack(std::string response)
+    {
+        if (d_callback)
+        {
+            d_callback(response);
+        }
+    }
 
     ~DataRequest() = default;
 
