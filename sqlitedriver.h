@@ -2,9 +2,6 @@
 #include <atomic>
 #include <string>
 #include <sqlite3.h>
-#include "datarequest.h"
-#include <deque>
-
 
 extern std::atomic<bool> ok_to_write;
 extern std::atomic<bool> ok_to_read;
