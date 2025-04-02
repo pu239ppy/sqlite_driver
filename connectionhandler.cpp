@@ -1,4 +1,5 @@
 #include <connectionhandler.h>
+#include "sqlitedriver.h"
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
@@ -7,6 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <functional>
+#include <iostream>
 
 
 void ConnectionHandler::operator()()
@@ -38,8 +40,10 @@ void ConnectionHandler::operator()()
         return;
     }
 
-    while (true) 
+    while (true ==  ok_to_handle_reads.load())
     {
+        // Accept a new connection
+        std::cout << "Waiting for a connection..." << std::endl;
         socklen_t len = sizeof(cli);
         int connfd = accept(sockfd, (struct sockaddr *)&cli, &len);
         if (connfd < 0) {

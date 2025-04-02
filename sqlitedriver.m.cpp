@@ -1,3 +1,4 @@
+#include "connectionhandler.h"
 #include "sqlitewriter.h"
 #include "sqlitereader.h"
 #include "sqlitedriver.h"
@@ -11,6 +12,7 @@
 
 std::atomic<bool> ok_to_write;
 std::atomic<bool> ok_to_read;
+std::atomic<bool> ok_to_handle_reads;
 
 bool opendb(std::string path, sqlite3 **db, int flags)
 {
@@ -30,13 +32,23 @@ int main()
     {
         ok_to_read.store(false);
         ok_to_write.store(false);
+        ok_to_handle_reads.store(false);
     });
 
     ok_to_read.store(true);
     ok_to_write.store(true);
+    ok_to_handle_reads.store(true);
 
+    SQLiteReader sqlreader("kvdb.db");
+    ConnectionHandler connectionHandler(sqlreader);
+
+    std::thread connectionThread(connectionHandler);
     std::thread writerThread(SQLiteWriter("kvdb.db"));
-    std::thread readerThread(SQLiteReader("kvdb.db"));
+    std::thread readerThread(sqlreader);
+    connectionThread.join();
+    // if connection handler exits for some reason we should quit
+    ok_to_read.store(false);
+    ok_to_write.store(false);
     writerThread.join();
     readerThread.join();
 }

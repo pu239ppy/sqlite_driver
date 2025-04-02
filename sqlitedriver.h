@@ -5,5 +5,6 @@
 
 extern std::atomic<bool> ok_to_write;
 extern std::atomic<bool> ok_to_read;
+extern std::atomic<bool> ok_to_handle_reads;
 
 extern bool opendb(std::string path, sqlite3 **db, int flags);
