@@ -58,7 +58,7 @@ void ConnectionHandler::operator()()
         }   
        
         std::function<void(std::string)> callback =
-            [&connfd](std::string response) 
+            [connfd](std::string response) 
         {
             write(connfd, response.c_str(), response.size());
             close(connfd);
