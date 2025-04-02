@@ -27,7 +27,7 @@ int main()
     ok_to_write.store(true);
     ok_to_handle_reads.store(true);
 
-    std::thread connectionThread(ConnectionHandler());
+    std::thread connectionThread(ConnectionHandler{});
     std::thread writerThread(SQLiteWriter("kvdb.db"));
     std::thread readerThread(SQLiteReader("kvdb.db"));
     //connectionThread.join();

@@ -14,6 +14,6 @@ extern std::deque<DataRequest> requestQueue;
 extern std::mutex queueLock;
 const int QUEUE_DEPTH = 1000;
 
-extern bool opendb(std::string path, sqlite3 **db, int flags);
+bool opendb(std::string path, sqlite3 **db, int flags);
 bool dequeueRequest(DataRequest& request);
 bool enqueueRequest(DataRequest& request);

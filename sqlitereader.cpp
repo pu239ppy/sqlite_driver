@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "sqlitedriver.h"
+#include <sqlite3.h>
 
 
 static int callback(void* data, int argc, char** argv, char** azColName) {
