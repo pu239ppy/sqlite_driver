@@ -4,15 +4,18 @@
 #include <deque>
 #include "sqlitedriver.h"
 
-
+const int QUEUE_DEPTH = 1000;
 
 class SQLiteReader
 {
     public:
         SQLiteReader(const std::string& filepath);
-        void operator()() const;
-        bool enqueueRequest(DataRequest& request) const;
-        bool deueueRequest(DataRequest& request) const;
+        void operator()();
+        bool enqueueRequest(DataRequest& request);
+        bool deueueRequest(DataRequest& request);
     private:
         std::string d_filepath;
+        std::deque<DataRequest> d_requestQueue;
+        std::mutex d_queueLock;
+        int d_queueDepth = QUEUE_DEPTH;
 };

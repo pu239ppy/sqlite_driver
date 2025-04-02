@@ -3,13 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "sqlitedriver.h"
-#include <mutex>
-#include "datarequest.h"
 
-namespace {
-    std::mutex queueLock;
-    std::deque<DataRequest> requestQueue;
-}
 
 static int callback(void* data, int argc, char** argv, char** azColName) {
     int i;
@@ -25,7 +19,7 @@ SQLiteReader::SQLiteReader(const std::string& filepath):
     d_filepath(std::move(filepath))
 {}
 
-void SQLiteReader::operator()() const
+void SQLiteReader::operator()()
 {
     sqlite3 *db;
     bool openres = opendb(d_filepath, &db, SQLITE_OPEN_READONLY);
@@ -35,8 +29,6 @@ void SQLiteReader::operator()() const
         return;
     }
     
-
-
     while (true == ok_to_read.load())
     {
 
@@ -63,27 +55,27 @@ void SQLiteReader::operator()() const
     return;
 }
 
-bool SQLiteReader::enqueueRequest(DataRequest& request) const
+bool SQLiteReader::enqueueRequest(DataRequest& request)
 {
-    std::lock_guard<std::mutex> lock(queueLock);
-    if (requestQueue.size() >= QUEUE_DEPTH)
+    std::lock_guard<std::mutex> lock(d_queueLock);
+    if (d_requestQueue.size() >= QUEUE_DEPTH)
     {
         std::cout << "Queue is full, cannot enqueue request." << std::endl;
         return false; // Queue is full
     }
-    requestQueue.push_front(request);
+    d_requestQueue.push_front(request);
     return true;
 }
 
-bool SQLiteReader::deueueRequest(DataRequest& request) const
+bool SQLiteReader::deueueRequest(DataRequest& request)
 {
-    std::lock_guard<std::mutex> lock(queueLock);
-    if (requestQueue.empty())
+    std::lock_guard<std::mutex> lock(d_queueLock);
+    if (d_requestQueue.empty())
     {
         std::cout << "Queue is empty, cannot dequeue request." << std::endl;
         return false; // Queue is empty
     }
-    request = requestQueue.back();
-    requestQueue.pop_back();
+    request = d_requestQueue.back();
+    d_requestQueue.pop_back();
     return true;
 }
