@@ -6,7 +6,6 @@
 #include <thread>
 #include <atomic>
 #include <string>
-#include <iostream>
 #include <sqlite3.h>
 
 
@@ -30,7 +29,7 @@ int main()
     std::thread connectionThread(ConnectionHandler{});
     std::thread writerThread(SQLiteWriter("kvdb.db"));
     std::thread readerThread(SQLiteReader("kvdb.db"));
-    //connectionThread.join();
+    connectionThread.join();
     // if connection handler exits for some reason we should quit
     ok_to_read.store(false);
     ok_to_write.store(false);

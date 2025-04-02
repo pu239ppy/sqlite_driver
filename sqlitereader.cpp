@@ -56,28 +56,3 @@ void SQLiteReader::operator()()
     std::cout << "Exiting reader thread" << std::endl;
     return;
 }
-
-/*bool SQLiteReader::enqueueRequest(DataRequest& request)
-{
-    std::lock_guard<std::mutex> lock(d_queueLock);
-    if (d_requestQueue.size() >= QUEUE_DEPTH)
-    {
-        std::cout << "Queue is full, cannot enqueue request." << std::endl;
-        return false; // Queue is full
-    }
-    d_requestQueue.push_front(request);
-    return true;
-}*/
-
-/*bool SQLiteReader::deueueRequest(DataRequest& request)
-{
-    std::lock_guard<std::mutex> lock(d_queueLock);
-    if (d_requestQueue.empty())
-    {
-        std::cout << "Queue is empty, cannot dequeue request." << std::endl;
-        return false; // Queue is empty
-    }
-    request = d_requestQueue.back();
-    d_requestQueue.pop_back();
-    return true;
-}*/

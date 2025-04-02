@@ -9,6 +9,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(sqlitedriverlib
     sqlitewriter.cpp
     sqlitereader.cpp
+    connectionhandler.cpp
+    sqlitedriver.cpp
 
 )
 
