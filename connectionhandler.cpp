@@ -72,7 +72,7 @@ void ConnectionHandler::operator()()
             std::string(buffer, bytes_read), 
             "AAA111", callback);
 
-        d_reader.enqueueRequest(request);
+        //d_reader.enqueueRequest(request);
     };
     
 

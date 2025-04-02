@@ -38,7 +38,7 @@ void SQLiteReader::operator()()
         int exec_rc = sqlite3_exec(db, SQL.c_str(), &callback, (void*)data, &errMsg);
 
         DataRequest request;
-        bool result = deueueRequest(request);
+        bool result = dequeueRequest(request);
 
         if (SQLITE_OK != exec_rc)
         {
@@ -56,7 +56,7 @@ void SQLiteReader::operator()()
     return;
 }
 
-bool SQLiteReader::enqueueRequest(DataRequest& request)
+/*bool SQLiteReader::enqueueRequest(DataRequest& request)
 {
     std::lock_guard<std::mutex> lock(d_queueLock);
     if (d_requestQueue.size() >= QUEUE_DEPTH)
@@ -66,9 +66,9 @@ bool SQLiteReader::enqueueRequest(DataRequest& request)
     }
     d_requestQueue.push_front(request);
     return true;
-}
+}*/
 
-bool SQLiteReader::deueueRequest(DataRequest& request)
+/*bool SQLiteReader::deueueRequest(DataRequest& request)
 {
     std::lock_guard<std::mutex> lock(d_queueLock);
     if (d_requestQueue.empty())
@@ -79,4 +79,4 @@ bool SQLiteReader::deueueRequest(DataRequest& request)
     request = d_requestQueue.back();
     d_requestQueue.pop_back();
     return true;
-}
+}*/
